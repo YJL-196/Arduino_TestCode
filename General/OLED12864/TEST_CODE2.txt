@@ -1,0 +1,33 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &Wire);
+
+int posX = 0;  // 初始X坐标
+int posY = 32; // 初始Y坐标
+
+void setup() {
+  Serial.begin(9600);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+}
+
+void loop() {
+  display.clearDisplay();  // 清空屏幕内容
+
+  // 在当前位置显示文本
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(posX, posY);
+  display.println("Moving Text!");
+
+  display.display();  // 显示文本
+
+  delay(100);  // 延迟一段时间
+
+  // 移动位置
+  posX += 2;  // X轴坐标增加
+  if (posX > 128) {
+    posX = -50; // 移动到屏幕外部
+  }
+}
+

@@ -1,0 +1,39 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
+
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &Wire);
+
+int circleX, circleY;  // 圆的当前位置
+int circleRadius = 10; // 圆的半径
+
+void setup() {
+  Serial.begin(9600);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  randomSeed(analogRead(0)); // 初始化随机数生成器
+  circleX = random(circleRadius, display.width() - circleRadius); // 在X轴随机位置
+  circleY = random(circleRadius, display.height() - circleRadius); // 在Y轴随机位置
+}
+
+void loop() {
+  display.clearDisplay(); // 清空屏幕内容
+
+  // 随机生成下一个位置
+  int newX = circleX + random(-2, 3); // 在[-2, 2]范围内随机移动
+  int newY = circleY + random(-2, 3); // 在[-2, 2]范围内随机移动
+
+  // 确保圆不会移动出屏幕范围
+  newX = constrain(newX, circleRadius, display.width() - circleRadius);
+  newY = constrain(newY, circleRadius, display.height() - circleRadius);
+
+  // 更新圆的位置
+  circleX = newX;
+  circleY = newY;
+
+  // 在新位置绘制圆
+  display.fillCircle(circleX, circleY, circleRadius, SSD1306_WHITE);
+
+  display.display(); // 显示绘制内容
+  delay(100); // 延迟一段时间
+}
+
